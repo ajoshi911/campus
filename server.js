@@ -29,16 +29,23 @@ app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: 'Too many reque
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   'http://localhost:5173',
-  'http://localhost:3000',
-].filter(Boolean);
+];
 
 app.use(cors({
-  origin: (origin, cb) => {
-    if (!origin || allowedOrigins.includes(origin)) return cb(null, true);
-    cb(new Error('CORS not allowed'));
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("CORS not allowed"));
   },
   credentials: true,
 }));
+
+// ✅ IMPORTANT (preflight fix)
+app.options('*', cors());
 
 /* ── Parsers ──────────────────────────────────────── */
 app.use(express.json({ limit: '10mb' }));
