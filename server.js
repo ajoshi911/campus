@@ -28,23 +28,25 @@ app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 200, message: 'Too many reque
 /* ── CORS ─────────────────────────────────────────── */
 const allowedOrigins = [
   process.env.FRONTEND_URL,
+  'https://campus-frontend-master.vercel.app',
+  'https://campus-frontend-kappa.vercel.app',
   'http://localhost:5173',
 ];
 
 app.use(cors({
-  origin: function (origin, callback) {
+  origin: (origin, callback) => {
     if (!origin) return callback(null, true);
 
     if (allowedOrigins.includes(origin)) {
       return callback(null, true);
     }
 
+    console.log("Blocked CORS:", origin);
     return callback(new Error("CORS not allowed"));
   },
   credentials: true,
 }));
 
-// ✅ IMPORTANT (preflight fix)
 app.options('*', cors());
 
 /* ── Parsers ──────────────────────────────────────── */
