@@ -35,7 +35,7 @@ function proxyStream(remoteUrl, res, onError) {
 }
 
 /* ════════ GET /api/books ════════ */
-router.get('/', protect, async (req, res) => {
+router.get('/',  async (req, res) => {
   const { search, subject, department, year, page = 1, limit = 20 } = req.query;
   const filter = { isActive: true };
   if (subject)    filter.subject    = new RegExp(subject, 'i');
